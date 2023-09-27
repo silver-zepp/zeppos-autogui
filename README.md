@@ -14,7 +14,7 @@ const gui = new AutoGUI();
 // add a text widget
 const my_text = gui.text("Hello, world!");
 
-// split the line
+// add a new row for the next widget
 gui.newLine();
 
 // add a button widget with a click event
