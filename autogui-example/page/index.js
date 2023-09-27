@@ -30,9 +30,27 @@ class Index {
   }
 
 	drawGUI(){
+    this.example_HelloWorld();
     //this.example_Arc();
     //this.example_ColorPicker();
-    this.example_Calculator();
+    //this.example_Calculator();
+  }
+  // Example #0: Hello World
+  example_HelloWorld(){
+    // add a text widget
+    const my_text = gui.text("Hello, world!");
+
+    // split the line
+    gui.newLine();
+
+    // add a button widget with a click event
+    gui.button("Click me!", () => { 
+        // update the text widget on button click
+        my_text.update({ text: "Button clicked!" }); 
+    });
+
+    // Finally render the GUI
+    gui.render();
   }
   // Example #1: the Arc
   example_Arc(){
