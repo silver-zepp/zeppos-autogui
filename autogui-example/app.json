@@ -1,0 +1,49 @@
+{
+  "configVersion": "v3",
+  "app": {
+    "appId": 20687,
+    "appName": "AutoGUI Examples",
+    "appType": "app",
+    "version": {
+      "code": 1,
+      "name": "1.0.0"
+    },
+    "icon": "icon.png",
+    "vender": "zepp",
+    "description": "AutoGUI Examples: Calculator with Keyboard sounds and more"
+  },
+  "permissions": 
+  [
+    "device:os.bg_service", "data:os.device.info"
+  ],
+  "runtime": {
+    "apiVersion": {
+      "compatible": "3.0.0",
+      "target": "3.0.0",
+      "minVersion": "3.0"
+    }
+  },
+  "targets": {
+    "gt": {
+      "module": {
+        "page": {
+          "pages": [
+            "page/index"
+          ]
+        }
+      },
+      "platforms": [
+        {
+          "st": "r",
+          "dw": 480
+        }
+      ]
+    }
+  },
+  "i18n": {
+    "en-US": {
+      "appName": "AutoGUI Examples"
+    }
+  },
+  "defaultLanguage": "en-US"
+}
