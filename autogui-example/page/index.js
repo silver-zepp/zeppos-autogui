@@ -87,7 +87,7 @@ class Index {
   }
   // Example #3: Calculator
   example_Calculator(){
-    // draw the text field with a "remove" button
+    // draw the text field
     this.my_text = gui.text("0");
     gui.newLine();
     // draw the buttons
