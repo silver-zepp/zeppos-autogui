@@ -120,7 +120,7 @@ class Index {
 
 Page({
   onInit() {
-    AutoGUI.SetTextSize(40);
+    AutoGUI.SetTextSize(30);
     //AutoGUI.SetPadding(2);
     //AutoGUI.SetColor(COLOR_BLUE);
     AutoGUI.SetColor(multiplyHexColor(COLOR_WHITE, 0.2));
