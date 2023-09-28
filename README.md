@@ -5,8 +5,9 @@ AutoGUI is a simple and easy-to-use library for creating graphical user interfac
 Clone the repository or install with npm (later).
 
 ## Usage
-Here's a basic example of how to use AutoGUI:
+Here are a few basic examples of how to use AutoGUI:
 
+## Example #1 (Hello, World):
 ```javascript
 import AutoGUI from '../autogui/auto-gui';
 const gui = new AutoGUI();
@@ -30,7 +31,84 @@ gui.render();
 ## Result
 ![](./assets/autogui-hello-world.png)
 
-For more detailed examples and usage instructions, please see/download the `autogui-examples`.
+## Example #2 (Rotating Arc):
+```javascript
+this.arc = gui.arc(); // gui.arc(0, true);
+
+setInterval(() => {
+  temp_angle = (temp_angle + 5) % 360;
+  // readjust angle based on the coordinate system
+  let end_angle = temp_angle;
+  if (!this.arc.use_original_coordinates) {
+    end_angle -= 90;
+  }
+  this.arc.update({ end_angle: end_angle });
+}, 100);
+
+gui.render();
+```
+
+## Result
+![](./assets/autogui-arc.png)
+
+## Example #3 (Color Picker):
+```javascript
+const colors_arr = [COLOR_RED, COLOR_ORANGE, COLOR_YELLOW, COLOR_GREEN, COLOR_BLUE, COLOR_INDIGO, COLOR_VIOLET];
+this.txt_selected_color = gui.text("Selected color: #000000");
+
+gui.newLine();
+
+for (const color of colors_arr) {
+  const rect = gui.fillRect(color);
+  rect.onClickUp(() => {
+    sound.play();
+    this.txt_selected_color.update({ text: "Selected color: " + color.toString(16) });
+  });
+}
+
+gui.render();
+```
+
+## Result
+![](./assets/autogui-color-picker.png)
+
+## Example #4 (Calculator):
+```javascript
+// define calculator's layout
+const btn_layout_arr = [ 
+  "7", "8", "9", "x", "n", 
+  "4", "5", "6", "+", "n", 
+  "1", "2", "3", "-", "n", 
+  "<", "0", ".", "/", "n",
+];
+// draw the text field with a "remove" button
+this.my_text = gui.text("0");
+gui.newLine();
+// draw the buttons
+for(let i = 0; i < btn_layout_arr.length; i++){
+  if (btn_layout_arr[i] === "n"){
+    gui.newLine();
+  } else {
+    gui.button(btn_layout_arr[i], ()=> onBtn(btn_layout_arr[i], this.my_text, sound));
+  }
+}
+// last line/row
+gui.spacer();
+gui.button("C", ()=> onBtn("C", this.my_text, sound));
+gui.button("=", ()=> onBtn("=", this.my_text, sound));
+gui.spacer();
+// specify layout for the buttons on the last row, in %
+// [ 17 ] [   33   ] [   33   ] [ 17 ]
+gui.lineLayout(17, 33, 33, 17); 
+
+// finally render the whole gui
+gui.render();
+```
+
+## Result
+![](./assets/autogui-calculator.png)
+
+For more detailed examples and usage instructions, please see the `autogui-examples` folder.
 
 #### TextWidget, ButtonWidget, ImageWidget, CircleWidget, ArcWidget, FillRectWidget, StrokeRectWidget
 These classes inherit from the Widget class and represent specific types of widgets. They each have their own render() method which renders the widget on screen.
