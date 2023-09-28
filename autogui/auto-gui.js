@@ -1,4 +1,4 @@
-/** @about AutoGUI 1.0.0 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
+/** @about AutoGUI 1.0.6 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
 import { getDeviceInfo } from "@zos/device";
 export const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = getDeviceInfo();
 import hmUI, { createWidget, widget, align, text_style, prop } from "@zos/ui";
@@ -7,7 +7,8 @@ import { px } from "@zos/utils";
 const ERR_ALREADY_REMOVED = "This widget has already been removed!";
 const BTN_RADIUS    = 5;
 const DEFAULT_ICON  = "icon.png";
-const DEFAULT_TEXT  = "my text";
+
+const PX_CENTER_FIX = 4; // @fix 1.0.6
 
 /**
  * Class representing a widget.
@@ -32,8 +33,8 @@ class Widget {
     return {
       x: px(x + AutoGUI.GetPadding()),
       y: px(y),
-      w: px(width - AutoGUI.GetPadding() * 2),
-      h: px(height - AutoGUI.GetPadding() * 2),
+      w: px(width - AutoGUI.GetPadding() * 2 + PX_CENTER_FIX), // @fix 1.0.6
+      h: px(height - AutoGUI.GetPadding() * 2 + PX_CENTER_FIX),
     }
   }
   /**
@@ -182,8 +183,8 @@ class ButtonWidget extends Widget {
 				...super.default(x, y, width, height),
 				radius: BTN_RADIUS,
 				normal_color: default_color,
-				press_color: multiplyHexColor(default_color, 1.3),
-				text: this.properties.text,
+				press_color: btnPressColor(default_color, 1.3),   // @fix 1.0.6
+				text: this.properties.text || AutoGUI.GetText(),  // @fix 1.0.6
         text_size: AutoGUI.GetTextSize(),
         color: AutoGUI.GetTextColor(),
 				click_func: this.properties.click_func,
@@ -391,7 +392,7 @@ class AutoGUI {
    * @return {Widget} The created widget.
    */
   text(text) {
-    return this.#addWidget(new TextWidget({ text: text || DEFAULT_TEXT }));
+    return this.#addWidget(new TextWidget({ text: text || AutoGUI.GetText() }));
   }
   /**
    * Add a spacer in GUI system.
@@ -539,8 +540,9 @@ class AutoGUI {
   // static props
   static #padding = 2; // default = 2px
   static #default_color = 0xfc6950; // orange
-  static #dafault_text_color = 0xffffff; // white
+  static #default_text_color = 0xffffff; // white
   static #default_text_size = DEVICE_WIDTH / 16; // 30px @480
+  static #default_text = "my text";
   /**
    * Set the padding value.
    * @param {number} value - The new padding value.
@@ -565,12 +567,12 @@ class AutoGUI {
    * Set the default text color value.
    * @param {number} value - The new default text color value.
    */
-  static SetTextColor(value) { this.#dafault_text_color = value }
+  static SetTextColor(value) { this.#default_text_color = value }
   /**
    * Get the current default text color value.
    * @return {number} The current default text color value.
    */
-  static GetTextColor() { return this.#dafault_text_color }
+  static GetTextColor() { return this.#default_text_color }
   /**
    * Set the default text size.
    * @param {number} value - The new default text size.
@@ -580,27 +582,65 @@ class AutoGUI {
    * Get the current default text size.
    * @return {number} The current default text size.
    */
-  static GetTextSize() { return this.#default_text_size }
+  static GetTextSize() { return this.#default_text_size } // @add 1.0.6
+  /**
+   * Set the default text.
+   * @param {string} value - The new default text.
+   */
+  static SetText(value) { this.#default_text = value }
+  /**
+   * Get the current default text.
+   * @return {string} The current default text.
+   */
+  static GetText() { return this.#default_text }
 }
+
+/** HELPERS */
 
 /**
  * Multiplies/Divides each component (red, green, blue) of a hexadecimal color by a multiplier.
- * @param {number} hexColor - The hexadecimal color to multiply.
+ * @param {number} hex_color - The hexadecimal color to multiply.
  * @param {number} multiplier - The multiplier/divider. [example 1]: 1.3 = +30% [example 2]: 0.7 = -30%.
  * @return {string} The resulting hexadecimal color after multiplication.
  */
-export function multiplyHexColor(hexColor, multiplier) {
-  hexColor = Math.floor(hexColor).toString(16); 
+ export function multiplyHexColor(hex_color, multiplier) {
+  hex_color = Math.floor(hex_color).toString(16).padStart(6, "0"); // @fix 1.0.6
 
-  let r = parseInt(hexColor.substring(0, 2), 16);
-  let g = parseInt(hexColor.substring(2, 4), 16);
-  let b = parseInt(hexColor.substring(4, 6), 16);
+  let r = parseInt(hex_color.substring(0, 2), 16);
+  let g = parseInt(hex_color.substring(2, 4), 16);
+  let b = parseInt(hex_color.substring(4, 6), 16);
 
   r = Math.min(Math.round(r * multiplier), 255);
   g = Math.min(Math.round(g * multiplier), 255);
   b = Math.min(Math.round(b * multiplier), 255);
 
-  return "0x" + ((r << 16) | (g << 8) | b).toString(16).padStart(6, "0");
+  const result = "0x" + ((r << 16) | (g << 8) | b).toString(16).padStart(6, "0");
+  return result;
+}
+/**
+ * Adjusts the brightness of a hexadecimal color based on a multiplier.
+ * If any color component (red, green, blue) is at its maximum value (255) and the multiplier is greater than 1, the color is made dimmer by dividing it by the multiplier.
+ * Otherwise, the color is made brighter by multiplying it by the multiplier.
+ * @param {number} hexColor - The hexadecimal color to adjust. This should be a number that will be converted to a hexadecimal string.
+ * @param {number} multiplier - The factor by which to adjust the brightness of the color. If greater than 1, the color will be made brighter, unless any color component is already at its maximum value. If less than 1, the color will be made dimmer.
+ * @return {string} The resulting hexadecimal color after adjustment.
+ */
+function btnPressColor(hex_color, multiplier){ // @add 1.0.6
+  hex_color = Math.floor(hex_color).toString(16).padStart(6, "0");
+
+  let r = parseInt(hex_color.substring(0, 2), 16);
+  let g = parseInt(hex_color.substring(2, 4), 16);
+  let b = parseInt(hex_color.substring(4, 6), 16);
+  
+  // check if any of the color components are at their maximum value
+  if (r === 255 || g === 255 || b === 255) {
+    // and if so + the multiplier is greater than 1, divide the color
+    if (multiplier > 1) {
+      return multiplyHexColor("0x" + hex_color, 1 / multiplier); // inverse
+    }
+  }
+  // otherwise usual multiplication
+  return multiplyHexColor("0x" + hex_color, multiplier);
 }
 
 export default AutoGUI;
@@ -609,4 +649,11 @@ export default AutoGUI;
  * @changelog
  * 1.0.0
  * - initial release
+ * 1.0.6
+ * - @fix widgets centered
+ * - @fix typos
+ * - @fix button default text use
+ * - @add setter/getter for default text
+ * - @fix multiplyHexColor() invalid color parse approach
+ * - @add btnPressColor() - robust approach for button light up/dim down
  */
