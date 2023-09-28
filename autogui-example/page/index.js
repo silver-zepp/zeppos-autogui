@@ -1,6 +1,6 @@
 import * as style from 'zosLoader:./index.[pf].layout.js'
 import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GREEN, COLOR_INDIGO, COLOR_ORANGE, COLOR_RED, COLOR_VIOLET, COLOR_WHITE, COLOR_YELLOW } from '../include/constants';
-//import * as C from '../include/constants'
+//import * as C from '../include/constants' // shorter approach, C stands for CONSTANTS, capitalized to differ from a, b, c vars
 
 import { createCalculator } from '../include/calculator';
 const onBtn = createCalculator();
@@ -30,10 +30,10 @@ class Index {
   }
 
 	drawGUI(){
-    this.example_HelloWorld();
+    //this.example_HelloWorld();
     //this.example_Arc();
     //this.example_ColorPicker();
-    //this.example_Calculator();
+    this.example_Calculator();
   }
   // Example #0: Hello World
   example_HelloWorld(){
@@ -49,7 +49,7 @@ class Index {
         my_text.update({ text: "Button clicked!" }); 
     });
 
-    // Finally render the GUI
+    // finally render the GUI
     gui.render();
   }
   // Example #1: the Arc
@@ -63,7 +63,7 @@ class Index {
       if (!this.arc.use_original_coordinates) {
         end_angle -= 90;
       }
-      this.arc._update({ end_angle: end_angle });
+      this.arc.update({ end_angle: end_angle });
     }, 100);
 
     gui.render();
@@ -79,7 +79,7 @@ class Index {
       const rect = gui.fillRect(color);
       rect.onClickUp(() => {
         sound.play();
-        this.txt_selected_color._update({ text: "Selected color: " + color.toString(16) });
+        this.txt_selected_color.update({ text: "Selected color: " + color.toString(16) });
       });
     }
   
@@ -105,8 +105,9 @@ class Index {
     gui.button("C", ()=> onBtn("C", this.my_text, sound));
     gui.button("=", ()=> onBtn("=", this.my_text, sound));
     gui.spacer();
-
-    gui.lineLayout(17, 33, 33, 17);
+    // specify layout for the buttons on the last row, in %
+    // [ 17 ] [   33   ] [   33   ] [ 17 ]
+    gui.lineLayout(17, 33, 33, 17); 
 
     // finally render the whole gui
     gui.render();
@@ -119,11 +120,11 @@ class Index {
 
 Page({
   onInit() {
-    //AutoGUI.SetTextSize(40);
+    AutoGUI.SetTextSize(40);
     //AutoGUI.SetPadding(2);
     //AutoGUI.SetColor(COLOR_BLUE);
-    //AutoGUI.SetColor(multiplyHexColor(COLOR_WHITE, 0.2));
-    //AutoGUI.SetTextColor(multiplyHexColor(COLOR_GREEN, 1.0));
+    AutoGUI.SetColor(multiplyHexColor(COLOR_WHITE, 0.2));
+    AutoGUI.SetTextColor(COLOR_GREEN);
     this.indexPage = new Index;
     this.indexPage.init();
   },
