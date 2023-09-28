@@ -8,12 +8,13 @@ Clone the repository or install with npm (later).
 Here's a basic example of how to use AutoGUI:
 
 ```javascript
+import AutoGUI from '../autogui/auto-gui';
 const gui = new AutoGUI();
 
 // add a text widget
 const my_text = gui.text("Hello, world!");
 
-// split the line
+// add a new row for the next widget
 gui.newLine();
 
 // add a button widget with a click event
@@ -25,6 +26,9 @@ gui.button("Click me!", () => {
 // Finally render the GUI
 gui.render();
 ```
+
+## Result
+![](./assets/autogui-hello-world.png)
 
 For more detailed examples and usage instructions, please see/download the `autogui-examples`.
 
