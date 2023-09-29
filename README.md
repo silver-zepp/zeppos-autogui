@@ -89,13 +89,13 @@ for(let i = 0; i < btn_layout_arr.length; i++){
   if (btn_layout_arr[i] === "n"){
     gui.newLine();
   } else {
-    gui.button(btn_layout_arr[i], ()=> onBtn(btn_layout_arr[i], this.my_text, sound));
+    gui.button(btn_layout_arr[i], ()=> onBtn(btn_layout_arr[i]));
   }
 }
 // last line/row
 gui.spacer();
-gui.button("C", ()=> onBtn("C", this.my_text, sound));
-gui.button("=", ()=> onBtn("=", this.my_text, sound));
+gui.button("C", ()=> onBtn("C"));
+gui.button("=", ()=> onBtn("="));
 gui.spacer();
 // specify layout for the buttons on the last row, in %
 // [ 17 ] [   33   ] [   33   ] [ 17 ]
