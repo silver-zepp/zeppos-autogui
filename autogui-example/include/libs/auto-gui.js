@@ -1,1 +1,0 @@
-C:/zepp/GitHub/zeppos-autogui/autogui/v2/auto-gui.js
