@@ -13,8 +13,8 @@ export const LINE_COLOR = 0x333333;
 
 export const COLOR_WHITE = 0xffffff; 
 export const COLOR_BLACK = 0x000000;
-export const COLOR_ORANGE = 0xFFA500; // _norm _press prev: 0xfc6950
-export const COLOR_RED = 0x8B0000; // 0xff6347
+export const COLOR_ORANGE = 0xFFA500;
+export const COLOR_RED = 0x8B0000;
 export const COLOR_GREEN = 0x3cb371;
 export const COLOR_BLUE = 0x0884d0;
 export const COLOR_YELLOW = 0xFFFF00;
