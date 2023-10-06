@@ -1,0 +1,12 @@
+{
+  "name": "@silver-zepp/autogui",
+  "version": "1.2.2",
+  "description": "An easy to use library for creating auto-positioned GUIs for ZeppOS",
+  "main": "autogui.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "zeppos": true,
+  "author": "Silver, Zepp Health",
+  "license": "MIT"
+}

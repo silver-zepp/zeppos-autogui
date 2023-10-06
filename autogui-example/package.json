@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "@zeppos/device-types": "^3.0.0"
+  },
+  "dependencies": {
+    "@silver-zepp/autogui": "^1.2.2"
   }
 }
