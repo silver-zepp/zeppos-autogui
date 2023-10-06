@@ -682,7 +682,7 @@ class AutoGUI {
         // if the row is now empty, remove it from layout
         if (row.length === 0) {
           this.#layout.splice(i, 1);
-          // Also update this.#widgets_arr
+          // also update this.#widgets_arr
           this.#widgets_arr.splice(i, 1);
         }
         break;
@@ -869,7 +869,7 @@ class AutoGUI {
  * Adjusts the brightness of a hexadecimal color based on a multiplier.
  * If any color component (red, green, blue) is at its maximum value (255) and the multiplier is greater than 1, the color is made dimmer by dividing it by the multiplier.
  * Otherwise, the color is made brighter by multiplying it by the multiplier.
- * @param {number} hexColor - The hexadecimal color to adjust. This should be a number that will be converted to a hexadecimal string.
+ * @param {number} hex_color - The hexadecimal color to adjust. This should be a number that will be converted to a hexadecimal string.
  * @param {number} multiplier - The factor by which to adjust the brightness of the color. If greater than 1, the color will be made brighter, unless any color component is already at its maximum value. If less than 1, the color will be made dimmer.
  * @return {string} The resulting hexadecimal color after adjustment.
  */
