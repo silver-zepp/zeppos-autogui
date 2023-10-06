@@ -15,7 +15,8 @@ Here are a few basic examples of how to use AutoGUI:
 ## 💡Example #1 (Hello, World):
 ![](./assets/hello-world.gif)
 ```javascript
-import AutoGUI from 'auto-gui';
+// install -> npm i @silver-zepp/autogui
+import AutoGUI from "@silver-zepp/autogui"
 const gui = new AutoGUI();
 
 // add a text widget
