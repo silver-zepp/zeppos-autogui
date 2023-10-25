@@ -18,6 +18,7 @@ import { SoundPlayer } from "../include/libs/easy-media"
 // dummy object (to use on a simulator)
 const sound = { play: function() {}, destroy: function() {} }; 
 
+
 const btn_layout_arr = [ 
   "7", "8", "9", "x", "n", 
   "4", "5", "6", "+", "n", 
@@ -28,15 +29,21 @@ const btn_layout_arr = [
 let temp_angle = 0;
 
 /**
- * 1 : Hello World
- * 2 : Moving Arc
- * 3 : Color Picker
- * 4 : Calculator
- * 5 : Nested Widgets
- * 6 : AutoReconstruct GUI
- * 7 : Custom Themes
- * 8 : Advanced GUI */
-const SELECTED_EXAMPLE = 8;
+ * Refer to our official documentation to find more parameters that widgets accept: 
+ * https://bit.ly/zepp-widgets
+ */
+
+/**
+ * 1 : Hello World          : example_HelloWorld
+ * 2 : Moving Arc           : example_Arc
+ * 3 : Color Picker         : example_ColorPicker
+ * 4 : Calculator           : example_Calculator
+ * 5 : Nested Widgets       : example_NestedWidgets
+ * 6 : AutoReconstruct GUI  : example_AutoReconstructGUI
+ * 7 : Custom Themes        : example_CustomThemes
+ * 8 : Advanced GUI         : example_AdvancedGUI     */
+const SELECTED_EXAMPLE = 1;
+
 
 class Index {
   init(){
@@ -52,13 +59,17 @@ class Index {
     // add a text widget
     const my_text = gui.text("Hello, world!");
 
-    // split the line
-    gui.newLine();
+    // split the row
+    gui.newRow();
 
     // add a button widget with a click event
     gui.button("Click me!", () => { 
         // update the text widget on button click
         my_text.update({ text: "Button clicked!" }); 
+
+        // get and print text object properties
+        const props =  my_text.getProperties();
+        console.log(`Text: ${ props.text } Height: ${ props.h }`);
     });
 
     // finally render the GUI
@@ -99,7 +110,7 @@ class Index {
     // create a modifiable text field
     this.txt_selected_color = gui.text("Selected color: #000000");
    
-    gui.newLine();
+    gui.newRow();
 
     for (const color of colors_arr) {
       // create a fill rect object
@@ -124,12 +135,12 @@ class Index {
     // draw the text field
     this.my_text = gui.text("0");
 
-    gui.newLine();
+    gui.newRow();
 
     // draw the buttons
     for(let i = 0; i < btn_layout_arr.length; i++){
       if (btn_layout_arr[i] === "n"){
-        gui.newLine();
+        gui.newRow();
       } else if (btn_layout_arr[i] === " ") {
         gui.spacer();
       } else {
@@ -145,7 +156,7 @@ class Index {
 
     // specify layout for the buttons on the last row, in %
     // [ 17 ] [   33   ] [   33   ] [ 17 ]
-    gui.lineLayout(17, 33, 33, 17); 
+    gui.rowLayout(17, 33, 33, 17); 
 
     // finally render the whole gui
     gui.render();
@@ -165,7 +176,7 @@ class Index {
     // update group widget's individual elements on button clicks
     gui.button("Change\nText", ()=> { text.update({ text: randomAnimalName() }) });
 
-    gui.newLine();
+    gui.newRow();
 
     gui.button("Change\nFill", ()=> { fill.update({ color: randomHex() }); });
     gui.button("Change\nStroke", ()=> { stroke.update({ color: randomHex(), line_width: 16 }) });
@@ -183,7 +194,7 @@ class Index {
         const btn = gui.button(randomAnimalName(), ()=> btn.remove(), { normal_color: randomHex() } );
       }
       if (i < 2) { // don't create a new line after the last row
-        gui.newLine();
+        gui.newRow();
       }
     }
 
@@ -197,24 +208,24 @@ class Index {
 
     gui.text("Customized GUI Themes!");
 
-    gui.newLine(); // ---
+    gui.newRow(); // ---
 
     gui.button("Text size ⬆️", ()=> { AutoGUI.SetTextSize(AutoGUI.GetTextSize() + 5); gui.render(true); });
     gui.button("Text size ⬇️", ()=> { AutoGUI.SetTextSize(AutoGUI.GetTextSize() - 5); gui.render(true);});
     gui.button("Color\nCHANGE", ()=> { AutoGUI.SetColor(randomHex()); gui.render(true);  });
     gui.button("Text color\nCHANGE", ()=> { AutoGUI.SetTextColor(randomHex()); gui.render(true);  });
     
-    gui.newLine(); // ---
+    gui.newRow(); // ---
     
     gui.button("Btn radius ⬆️", ()=> { AutoGUI.SetBtnRadius(AutoGUI.GetBtnRadius() + 10); gui.render(true);});
     gui.button("Btn radius ⬇️", ()=> { AutoGUI.SetBtnRadius(AutoGUI.GetBtnRadius() - 10); gui.render(true); });
 
-    gui.newLine(); // ---
+    gui.newRow(); // ---
 
     gui.button("Padding ⬆️", ()=> { AutoGUI.SetPadding(AutoGUI.GetPadding() + 5); gui.render(true); });
     gui.button("Padding ⬇️", ()=> { AutoGUI.SetPadding(AutoGUI.GetPadding() - 5); gui.render(true); });
 
-    gui.newLine(); // ---
+    gui.newRow(); // ---
 
     gui.startGroup();
       // the color of this widget won't change
@@ -235,8 +246,8 @@ class Index {
       const text_field = gui.text("Click on one of the icons!", { color: COLOR_WHITE });
     gui.endGroup();
 
-    // split the line
-    gui.newLine();
+    // split the row
+    gui.newRow();
 
     // describe the buttons
     const buttons_arr = [
@@ -274,7 +285,7 @@ class Index {
     
       // add a new line after every two buttons
       if (i % 2 === 1) {
-        gui.newLine();
+        gui.newRow();
       }
     }
 

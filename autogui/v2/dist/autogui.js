@@ -1,12 +1,13 @@
-/** @about AutoGUI 1.2.2 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
+/** @about AutoGUI 1.2.6 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
 import { getDeviceInfo } from "@zos/device";
-export const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = getDeviceInfo();
 import hmUI, { createWidget, widget, align, text_style, prop } from "@zos/ui";
 import { px } from "@zos/utils";
 import { getImageInfo } from '@zos/ui' // img width/height
+export const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = getDeviceInfo();
 
 const ERR_ALREADY_REMOVED = "This widget has already been removed!";
 const ERR_NO_GROUP_TO_END = "No group to end. Did you forget to call startGroup()?"; // @add 1.2.2
+const ERR_DEPRECATED = "This method is deprecated and will be removed in the future.";
 
 const DEFAULT_ICON  = "icon.png";
 const DEFAULT_LINE_WIDTH_STROKE = 4;
@@ -30,6 +31,7 @@ class Widget {
     this.needs_update = true;
     this.is_rendered = false;
   }
+
   /**
    * @param {none} ATTENTION INTERNAL METHOD. DO NOT USE.
    */
@@ -42,26 +44,55 @@ class Widget {
 
     return this.properties;
   }
+
   /**
    * Update the properties of the widget.
    * @param {Object} new_properties - The new properties to update. Use the official widgets approach here:
    * @example
    * ```js
-   * .update({ text: "new text", color: 0xFF0000, ... })
+   * .update({ text: "new text", color: 0xff0000, ... })
    * ```
    */
   update(new_properties) {
     this.properties = { ...this.properties, ...new_properties };
-  
+
     if (this.widget) {
       this.widget.setProperty(prop.MORE, this.properties); // @fix 1.2.2
     }
-  
+
     this.needs_update = true;
-  
+
     // re-render the GUI
     if (this.gui) {
       this.gui.render();
+    }
+  }
+
+  /**
+   * Get the properties of an object.
+   * @param {...string} properties - The properties to get.
+   * @examples
+   * ```js
+   * // example: get all properties
+   * .getProperties();
+   * // example: get 'text' property
+   * .getProperties('text');
+   * // advanced example: get 'text' and 'x' properties
+   * .getProperties('text', 'x');
+   * ```
+   * @return {object|string|undefined} The requested properties. If no arguments are passed, it returns all properties. If one argument is passed, it returns the value of that property. If multiple arguments are passed, it returns an object with those properties. If a requested property does not exist, it returns undefined for that property.
+   */
+  getProperties(...properties){ // @add 1.2.6
+    if (properties.length === 0) {
+        return this.properties; // all
+    } else if (properties.length === 1) {
+        return this.properties[properties[0]]; // single
+    } else {
+        let result = {};
+        for (let prop of properties) {
+            result[prop] = this.properties[prop]; // multiple
+        }
+        return result;
     }
   }
 
@@ -85,6 +116,7 @@ class Widget {
       this.gui.render();
     }
   }
+
   /**
    * Attach an event listener for the 'on release' event.
    * @param {function} callback - The callback function to execute when the event is triggered.
@@ -96,6 +128,7 @@ class Widget {
       this.widget.addEventListener(hmUI.event.CLICK_UP, this.#on_release_callback);
     } 
   }
+
   /**
    * Attach an event listener for the 'on press' event.
    * @param {function} callback - The callback function to execute when the event is triggered.
@@ -107,6 +140,7 @@ class Widget {
       this.widget.addEventListener(hmUI.event.CLICK_DOWN, this.#on_press_callback);
     }
   }
+
   /**
    * @param {none} ATTENTION INTERNAL METHOD. DO NOT USE.
    */
@@ -118,6 +152,7 @@ class Widget {
       this.widget.addEventListener(hmUI.event.CLICK_DOWN, this.#on_press_callback);
     }
   }
+
   /**
    * Remove all event listeners from the widget.
    */
@@ -131,6 +166,7 @@ class Widget {
       this.#on_press = false;
     }
   }
+
   /**
    * @param {none} ATTENTION INTERNAL METHOD. DO NOT USE.
    */
@@ -387,9 +423,9 @@ class AutoGUI {
    * Set layout percentages for each line in GUI system.
    * @param {...number} percentages - The layout percentages for each line in GUI system.
    */
-  lineLayout(...percentages) {
+  rowLayout(...percentages) { // @upd 1.3.0
     let row = this.#layout[this.#layout.length - 1];
-  
+
     // assign the specified percentages to the widgets in the row/line
     for (let i = 0; i < row.length; i++) {
       if (i < percentages.length) {
@@ -398,6 +434,14 @@ class AutoGUI {
         row[i].percentage = null;
       }
     }
+  }
+
+  /**
+   * @deprecated This method is deprecated and will be removed in the future. Please use rowLayout instead.
+   */
+  lineLayout(...percentages) {
+    console.log(ERR_DEPRECATED, "Please use rowLayout instead.");
+    this.rowLayout(...percentages);
   }
   
   /**
@@ -409,7 +453,7 @@ class AutoGUI {
    * // example: initialize text widget with the specified text
    * .text("new text"); 
    * // advanced example: initialize custom text and *optionally the color
-   * .text("new text", { color: 0x00FF00, ... });
+   * .text("new text", { color: 0x00ff00, ... });
    * ```
    * @return {Widget} The created widget.
    */
@@ -461,7 +505,7 @@ class AutoGUI {
    * // example: draw a circle with a default color
    * .circle(); 
    * // advanced example: specify color and optionally the radius
-   * .circle(0x0000FF, { radius: 50, ... });
+   * .circle(0x0000ff, { radius: 50, ... });
    * ```
    * @return {Widget} The created widget.
    */
@@ -478,7 +522,7 @@ class AutoGUI {
    * ```js
    * .arc(90); // example: initialize the arc with an end angle
    * // advanced example: specify end angle and the color of the arc
-   * .arc(90, { color: 0xFF0000, ... }); 
+   * .arc(90, { color: 0xff0000, ... }); 
    * ```
    * @return {Widget} The created widget.
    */
@@ -521,28 +565,35 @@ class AutoGUI {
   }
 
   /**
-   * Add a new line in GUI system. 
+   * Add a new row in GUI system (split the screen vertically by even chunks).
    */
-   newLine() {
-		if (this.#current_row_arr.length > 0) {
-			// update the layout percentages for the current row
-			let row = this.#layout[this.#layout.length - 1];
-			let default_percentage = 100 / this.#current_row_arr.length;
-			for (let item of row) {
-				if (!item.percentage) {
-					item.percentage = default_percentage;
-				}
-			}
-	
-			this.#widgets_arr.push(this.#current_row_arr);
-			this.#current_row_arr = [];
-		}
+  newRow() { // @upd 1.2.5
+    if (this.#current_row_arr.length > 0) {
+        // update the layout percentages for the current row
+        let row = this.#layout[this.#layout.length - 1];
+        let default_percentage = 100 / this.#current_row_arr.length;
+        for (let item of row) {
+            if (!item.percentage) {
+                item.percentage = default_percentage;
+            }
+        }
+
+        this.#widgets_arr.push(this.#current_row_arr);
+        this.#current_row_arr = [];
+    }
     // making sure it's properly recalculated
     this.#updateLayoutPercentages();
 
-		// add a new row to the layout
-		this.#layout.push([]);
-	}
+    // add a new row to the layout
+    this.#layout.push([]);
+  }
+  /**
+  * @deprecated This method is deprecated and will be removed in the future. Please use newRow instead.
+  */
+  newLine(){
+    console.log(ERR_DEPRECATED, "Please use newRow instead.");
+    this.newRow();
+  }
 
   /**
    * Add a spacer in GUI system.
@@ -921,4 +972,9 @@ export default AutoGUI;
  * - @rem image default auto-scale removed
  * - @upd event method naming changes onClickUp -> onRelease, onClickDown -> onPress
  * - @add flag to force widgets update in render(forced = false), expensive operation
+ * 1.2.6
+ * - @add getter getProperties() that returns object's stored props
+ * - @upd newLine() was deprecated to avoid confusion with drawing lines. use newRow() instead
+ * - @upd lineLayout() was deprecated. use rowLayout() instead
+ * - @fix naming consistency
  */
