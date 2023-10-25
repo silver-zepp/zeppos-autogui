@@ -23,7 +23,7 @@ const gui = new AutoGUI();
 const my_text = gui.text("Hello, world!");
 
 //split the line
-gui.newLine();
+gui.newRow();
 
 // add a button widget with a click event
 gui.button("Click me!", () => {
@@ -71,7 +71,7 @@ const colors_arr = [COLOR_RED, COLOR_ORANGE, COLOR_YELLOW, COLOR_GREEN, COLOR_BL
 // create a modifiable text field
 this.txt_selected_color = gui.text("Selected color: #000000");
 
-gui.newLine();
+gui.newRow();
 
 for (const color of colors_arr) {
   // create a fill rect object
@@ -104,12 +104,12 @@ const btn_layout_arr = [
 // draw the text field
 this.my_text = gui.text("0");
 
-gui.newLine();
+gui.newRow();
 
 // draw the buttons
 for(let i = 0; i < btn_layout_arr.length; i++){
   if (btn_layout_arr[i] === "n"){
-    gui.newLine();
+    gui.newRow();
   } else if (btn_layout_arr[i] === " ") {
     gui.spacer();
   } else {
@@ -146,7 +146,7 @@ gui.endGroup();
 // update group widget's individual elements on button clicks
 gui.button("Change\nText", ()=> { text.update({ text: randomAnimalName() }) });
 
-gui.newLine();
+gui.newRow();
 
 gui.button("Change\nFill", ()=> { fill.update({ color: randomHex() }); });
 gui.button("Change\nStroke", ()=> { stroke.update({ color: randomHex(), line_width: 16 }) });
@@ -165,7 +165,7 @@ for (let i = 0; i < 3; i++) {
     const btn = gui.button(randomAnimalName(), ()=> btn.remove(), { normal_color: randomHex() } );
   }
   if (i < 2) { // don't create a new line after the last row
-    gui.newLine();
+    gui.newRow();
   }
 }
 
@@ -180,24 +180,24 @@ AutoGUI.SetTextSize(16);
 
 gui.text("Customized GUI Themes!");
 
-gui.newLine(); // ---
+gui.newRow(); // ---
 
 gui.button("Text size ⬆️", ()=> { AutoGUI.SetTextSize(AutoGUI.GetTextSize() + 5); gui.render(true); });
 gui.button("Text size ⬇️", ()=> { AutoGUI.SetTextSize(AutoGUI.GetTextSize() - 5); gui.render(true);});
 gui.button("Color\nCHANGE", ()=> { AutoGUI.SetColor(randomHex()); gui.render(true);  });
 gui.button("Text color\nCHANGE", ()=> { AutoGUI.SetTextColor(randomHex()); gui.render(true);  });
 
-gui.newLine(); // ---
+gui.newRow(); // ---
 
 gui.button("Btn radius ⬆️", ()=> { AutoGUI.SetBtnRadius(AutoGUI.GetBtnRadius() + 10); gui.render(true);});
 gui.button("Btn radius ⬇️", ()=> { AutoGUI.SetBtnRadius(AutoGUI.GetBtnRadius() - 10); gui.render(true); });
 
-gui.newLine(); // ---
+gui.newRow(); // ---
 
 gui.button("Padding ⬆️", ()=> { AutoGUI.SetPadding(AutoGUI.GetPadding() + 5); gui.render(true); });
 gui.button("Padding ⬇️", ()=> { AutoGUI.SetPadding(AutoGUI.GetPadding() - 5); gui.render(true); });
 
-gui.newLine(); // ---
+gui.newRow(); // ---
 
 gui.startGroup();
   // the color of this widget won't change
@@ -220,7 +220,7 @@ gui.startGroup();
 gui.endGroup();
 
 // split the line
-gui.newLine();
+gui.newRow();
 
 // describe the buttons
 const buttons_arr = [
@@ -256,9 +256,9 @@ for (let i = 0; i < buttons_arr.length; i++) {
 
   gui.endGroup();
 
-  // add a new line after every two buttons
+  // add a new row after every two buttons
   if (i % 2 === 1) {
-    gui.newLine();
+    gui.newRow();
   }
 }
 
@@ -273,8 +273,8 @@ These classes inherit from the Widget class and represent specific types of widg
 
 ## AutoGUI API Reference
 
-### lineLayout(...percentages)
-Set layout percentages for each line in GUI system.
+### rowLayout(...percentages)
+Set layout percentages for each row in GUI system.
 - **percentages**: The layout percentages for each line in GUI system.
 
 ### text(text, options = {})
@@ -321,7 +321,7 @@ Add a stroked rectangle in GUI system.
 - **options**: Optional parameters for the stroked rectangle.
 - Returns: The created widget.
 
-### newLine()
+### newRow()
 Add a new line in GUI system. 
 
 ### spacer()
