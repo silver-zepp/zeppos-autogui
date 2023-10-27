@@ -1,4 +1,4 @@
-/** @about AutoGUI 1.2.6 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
+/** @about AutoGUI 1.2.7 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
 import { getDeviceInfo } from "@zos/device";
 import hmUI, { createWidget, widget, align, text_style, prop } from "@zos/ui";
 import { px } from "@zos/utils";
@@ -288,7 +288,7 @@ class ButtonWidget extends Widget {
 
 class ImageWidget extends Widget {
   constructor({src, centered = true, ...options}) {
-    super("img", { src: src, centered: centered, ...options });
+    super("img", { src: src || DEFAULT_ICON, centered: centered, ...options }); // @fix 1.2.7
   }
 
   render(x, y, width, height) {
@@ -306,7 +306,7 @@ class ImageWidget extends Widget {
 
       this.widget = createWidget(widget.IMG, {
         ...super.default(center_x, center_y, img_info.width, img_info.height),
-        src: this.properties.src || DEFAULT_ICON,
+        src: this.properties.src,
         ...this.properties,
       });
     }
@@ -977,4 +977,6 @@ export default AutoGUI;
  * - @upd newLine() was deprecated to avoid confusion with drawing lines. use newRow() instead
  * - @upd lineLayout() was deprecated. use rowLayout() instead
  * - @fix naming consistency
+ * 1.2.7
+ * - @fix .image() no params
  */

@@ -5,7 +5,7 @@ import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GREEN, COLOR_INDIGO, COLOR_O
 import { createCalculator } from '../include/calculator';
 const onBtn = createCalculator();
 
-import AutoGUI, { multiplyHexColor } from '../../autogui/v2/autogui';
+import AutoGUI, { multiplyHexColor } from '../../autogui/v2/dist/autogui';
 const gui = new AutoGUI();
 
 import VisLog from '../include/libs/vis-log';
