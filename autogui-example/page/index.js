@@ -30,10 +30,21 @@ let temp_angle = 0;
 
 /**
  * Refer to our official documentation to find more parameters that widgets accept: 
+ * -------------------------------------------------------------------------------
  * https://bit.ly/zepp-widgets
  */
 
+/** 
+ * Download example and/or install autogui and vis-log from NPM
+ * ------------------------------------------------------------
+ * 1. git clone https://github.com/silver-zepp/zeppos-autogui
+ * 2. npm i @silver-zepp/autogui
+ * 3. npm i @silver-zepp/vis-log
+ */
+
 /**
+ * Examples Legend
+ * -----------------------------------------------------
  * 1 : Hello World          : example_HelloWorld
  * 2 : Moving Arc           : example_Arc
  * 3 : Color Picker         : example_ColorPicker

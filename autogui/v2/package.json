@@ -1,6 +1,6 @@
 {
   "name": "@silver-zepp/autogui",
-  "version": "1.2.6",
+  "version": "1.2.8",
   "description": "An easy to use library for creating auto-positioned GUIs for ZeppOS",
   "main": "dist/autogui.js",
   "types": "ts/autogui.d.ts",

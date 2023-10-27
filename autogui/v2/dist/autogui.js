@@ -1,4 +1,4 @@
-/** @about AutoGUI 1.2.7 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
+/** @about AutoGUI 1.2.8 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
 import { getDeviceInfo } from "@zos/device";
 import hmUI, { createWidget, widget, align, text_style, prop } from "@zos/ui";
 import { px } from "@zos/utils";
@@ -230,7 +230,7 @@ class GroupWidget extends Widget {  // @add 1.2.2
 
 class TextWidget extends Widget {
   constructor({text, ...options}) {
-    super("text", { text: text, ...options });
+    super("text", { text: text || AutoGUI.GetText(), ...options });  // @fix 1.2.8
   }
 
   render(x, y, width, height) {
@@ -242,7 +242,7 @@ class TextWidget extends Widget {
         align_h: align.CENTER_H,
         align_v: align.CENTER_V,
         text_style: DEFAULT_TEXT_STYLE, // @upd 1.2.2
-        text: this.properties.text || AutoGUI.GetText(),
+        text: this.properties.text,
         ...this.properties,
       });
     }
@@ -316,7 +316,7 @@ class ImageWidget extends Widget {
 
 class CircleWidget extends Widget {
   constructor({color, ...options}) {
-    super("circle", { color: color, ...options });
+    super("circle", { color: color  || AutoGUI.GetColor(), ...options }); // @fix 1.2.8
   }
 
   render(x, y, width, height) {
@@ -326,7 +326,7 @@ class CircleWidget extends Widget {
         center_x: x + width / 2,
         center_y: y + height / 2,
         radius: Math.min(width, height) / 2 - AutoGUI.GetPadding(),
-        color: this.properties.color || AutoGUI.GetColor(),
+        color: this.properties.color,
         ...this.properties,
       });
     }
@@ -979,4 +979,6 @@ export default AutoGUI;
  * - @fix naming consistency
  * 1.2.7
  * - @fix .image() no params
+ * 1.2.8
+ * - @fix .text() & .circle() with no params
  */
