@@ -1,4 +1,4 @@
-/** @about AutoGUI 1.2.8 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
+/** @about AutoGUI 1.2.9 @min_zeppos 2.0 @author: Silver, Zepp Health. @license: MIT */
 import { getDeviceInfo } from "@zos/device";
 import hmUI, { createWidget, widget, align, text_style, prop } from "@zos/ui";
 import { px } from "@zos/utils";
@@ -237,12 +237,11 @@ class TextWidget extends Widget {
     if (!this.widget) {
       this.widget = createWidget(widget.TEXT, {
         ...super.default(x, y, width, height),
-        color: AutoGUI.GetTextColor(),
-        text_size: AutoGUI.GetTextSize(),
+        color: this.properties.color || AutoGUI.GetTextColor(),
+        text_size: this.properties.text_size || AutoGUI.GetTextSize(),
         align_h: align.CENTER_H,
         align_v: align.CENTER_V,
-        text_style: DEFAULT_TEXT_STYLE, // @upd 1.2.2
-        text: this.properties.text,
+        text_style: this.properties.text_style || DEFAULT_TEXT_STYLE, // @fix 1.2.9
         ...this.properties,
       });
     }
@@ -261,8 +260,8 @@ class ButtonWidget extends Widget {
         ...super.default(x, y, width, height),
         radius: this.properties.radius || AutoGUI.GetBtnRadius(),
         text: this.properties.text || AutoGUI.GetText(),
-        text_size: AutoGUI.GetTextSize(),
-        color: AutoGUI.GetTextColor(),
+        text_size: this.properties.text_size || AutoGUI.GetTextSize(), // @fix 1.2.9
+        color: this.properties.color || AutoGUI.GetTextColor(),
         click_func: this.properties.click_func,
         ...this.#getSourceOrColor(),
         ...this.properties,
@@ -306,7 +305,6 @@ class ImageWidget extends Widget {
 
       this.widget = createWidget(widget.IMG, {
         ...super.default(center_x, center_y, img_info.width, img_info.height),
-        src: this.properties.src,
         ...this.properties,
       });
     }
@@ -323,9 +321,9 @@ class CircleWidget extends Widget {
     if (!this.widget) {
       this.widget = createWidget(widget.CIRCLE, {
         ...super.default(x, y, width, height),
-        center_x: x + width / 2,
-        center_y: y + height / 2,
-        radius: Math.min(width, height) / 2 - AutoGUI.GetPadding(),
+        center_x: this.properties.center_x || x + width / 2,
+        center_y: this.properties.center_y || y + height / 2,
+        radius: this.properties.radius || Math.min(width, height) / 2 - AutoGUI.GetPadding(),
         color: this.properties.color,
         ...this.properties,
       });
@@ -981,4 +979,6 @@ export default AutoGUI;
  * - @fix .image() no params
  * 1.2.8
  * - @fix .text() & .circle() with no params
+ * 1.2.9
+ * - @fix redundancy, unnecessary calls
  */

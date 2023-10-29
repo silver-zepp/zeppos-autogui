@@ -29,7 +29,7 @@ const btn_layout_arr = [
 let temp_angle = 0;
 
 /**
- * Refer to our official documentation to find more parameters that widgets accept: 
+ * Refer to our documentation to find more parameters that widgets accept: 
  * -------------------------------------------------------------------------------
  * https://bit.ly/zepp-widgets
  */
@@ -349,3 +349,18 @@ function randomHex() {
   const hexMax = 0xffffff;
   return "0x" + Math.floor(Math.random() * hexMax).toString(16).padStart(6, "0");
 }
+
+import { event } from '@zos/ui'
+import { setScrollLock } from '@zos/page'
+import { onGesture, GESTURE_RIGHT } from '@zos/interaction'
+
+/** IGNORE EXIT (->) SWIPE */
+onGesture({
+  callback: (event) => {
+    // if (event === GESTURE_RIGHT) { } // do something on right swipe
+    return true
+  },
+})
+
+/** DISABLE SCROLL */
+setScrollLock({ lock: true })
