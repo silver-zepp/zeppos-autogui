@@ -1,0 +1,5 @@
+version: 2
+tunnels:
+  http:
+    addr: 33333
+    proto: http

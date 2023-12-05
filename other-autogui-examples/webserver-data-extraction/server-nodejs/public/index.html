@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ZeppOS IRL RPG</title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div style="display: flex;">
+    <div id="chart-container" style="flex: 3;">
+      <canvas id="chart"></canvas>
+    </div>
+    <div style="flex: 1;">
+      <center>
+        <div id="stats-container">
+          <h2>HR</h2>
+          <p id="min">Min: N/A</p>
+          <p id="avg">Avg: N/A</p>
+          <p id="max">Max: N/A</p>
+          <p id="trend">Trend: N/A</p>
+        </div>
+        <div id="stats-container">
+			<h2>STEPS</h2>
+			<img id="state-image" src="./gif/idle.gif" alt="State Image">
+			<p id="steps">Steps: N/A</p>
+			<p id="state">State: N/A</p>
+			<p id="speed">Speed: N/A</p> 
+        </div>
+      </center>
+    </div>
+  </div>
+  <script>
+    const ws = new WebSocket('ws://localhost:33334'); // change it to your IP if not running local
+
+	const HR_MAX_ENTRIES = 40;
+
+    const data = {
+      labels: [],
+      datasets: [{
+        label: 'Heart Rate',
+        data: [],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
+    };
+
+    const config = {
+		type: 'line',
+		data: data,
+		options: { /** animation: false */ }
+    };
+
+    const chart = new Chart(
+      document.getElementById('chart'),
+      config
+    );
+
+    ws.onmessage = (event) => {
+			const server_data = JSON.parse(event.data);
+
+			// === HR RELATED === //
+			if (server_data.hr.length > 0) {
+				const heart_rate = server_data.hr[server_data.hr.length - 1];
+				const timestamp = new Date().toLocaleTimeString();
+				const entries_limiter = HR_MAX_ENTRIES;
+
+				// update statistics
+				document.getElementById('min').textContent = 'Min: ' + server_data.min;
+				document.getElementById('avg').textContent = 'Avg: ' + (server_data.avg ? parseInt(server_data.avg) : 'N/A');
+				document.getElementById('max').textContent = 'Max: ' + server_data.max;
+
+				let trend_emoji = '';
+				switch (server_data.trend) {
+					case 'Rising':
+						trend_emoji = '📈';
+						break;
+					case 'Falling':
+						trend_emoji = '📉';
+						break;
+					case 'Idle':
+						trend_emoji = '➖';
+						break;
+				}
+				document.getElementById('trend').textContent = 'Trend: ' + trend_emoji + ' ' + server_data.trend;
+
+				// update chart
+				if (data.labels.length > entries_limiter) {
+					chart.config.data.labels.splice(0, 1); // remove first label
+					chart.config.data.datasets[0].data.splice(0, 1); // remove first data point
+
+					data.labels.push(timestamp);
+					data.datasets[0].data.push(heart_rate);
+
+					chart.update({
+						duration: 200,
+						easing: 'easeOutBounce'
+					});
+				} else {
+					data.labels.push(timestamp);
+					data.datasets[0].data.push(heart_rate);
+					chart.update();
+				}
+			}
+
+			// === STEPS & ACCEL RELATED === //
+			if (server_data.steps != null) {
+				const step_last = server_data.steps;
+				document.getElementById('steps').textContent = 'Steps: ' + step_last;
+
+				// update state image
+				let state_img_src;
+				switch (server_data.state) {
+					case 'walking':
+						state_img_src = './gif/walking.gif';
+						break;
+					case 'running':
+						state_img_src = './gif/running.gif';
+						break;
+					case 'fall': // accel
+						state_img_src = './gif/fall.gif';
+						break;
+					default: // 'idle'
+						state_img_src = './gif/idle.gif';
+						break;
+				}
+				document.getElementById('state-image').src = state_img_src;
+				// update state text
+				document.getElementById('state').textContent = 'State: ' + server_data.state;
+				// update speed text
+				document.getElementById('speed').textContent = 'Speed: ' + parseFloat(server_data.speed).toFixed(1) + "/s";
+			}
+		}
+  </script>
+</body>
+</html>
