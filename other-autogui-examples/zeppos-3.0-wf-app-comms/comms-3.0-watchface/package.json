@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@silver-zepp/autogui": "^1.2.2-legacy"
+  }
+}
